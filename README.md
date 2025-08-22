@@ -1,23 +1,82 @@
-# Smart Locker System with RFID Access Control
+# 🔐 Smart RFID Locker Management System
 
-A comprehensive locker management system with RFID-based access control, built with Flutter and Firebase.
+A comprehensive Flutter-based locker management system with RFID access control, Firebase backend, and real-time monitoring capabilities. Built as a final year project demonstrating full-stack mobile development skills.
 
-## Features
+## 🚀 Live Demo
+[Add your deployed app link here when available]
 
-- 🔐 User authentication (sign up, login, password reset)
-- 🔑 Role-based access control (Admin/User)
-- 📱 Responsive design for mobile and web
-- 📊 Real-time access logs and monitoring
-- 🔔 Push notifications for access events
-- 🔄 Offline support with Firestore
-- 🌓 Light/Dark theme support
+## 📱 Screenshots
+[Add screenshots of your app here]
 
-## Prerequisites
+## ✨ Key Features
 
-- Flutter SDK (latest stable version)
-- Dart SDK (latest stable version)
-- Firebase project with Firestore, Authentication, and Storage enabled
-- Node.js and npm (for Firebase CLI)
+### 🔐 Authentication & Security
+- Secure user authentication with Firebase Auth
+- Role-based access control (Admin/User roles)
+- Password reset functionality
+- Session management
+
+### 📱 User Experience
+- Cross-platform Flutter app (Android, iOS, Web)
+- Responsive design for all screen sizes
+- Light/Dark theme support
+- Multi-language support (English/Malay)
+- Intuitive user interface
+
+### 🔑 RFID Integration
+- Hardware integration with ESP8266/Arduino
+- Real-time RFID card scanning
+- Locker assignment and management
+- Access control automation
+
+### 📊 Admin Dashboard
+- Real-time access logs and monitoring
+- User management system
+- Locker status tracking
+- Analytics and reporting
+- Extension request management
+
+### 🔔 Smart Notifications
+- Push notifications for access events
+- Email notifications for important updates
+- Real-time status updates
+
+### 💾 Data Management
+- Cloud Firestore for real-time data
+- Offline support and data synchronization
+- Secure data storage and backup
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Flutter** - Cross-platform mobile framework
+- **Dart** - Programming language
+- **Provider** - State management
+- **Material Design** - UI components
+
+### Backend
+- **Firebase Authentication** - User management
+- **Cloud Firestore** - NoSQL database
+- **Firebase Storage** - File storage
+- **Firebase Cloud Messaging** - Push notifications
+
+### Hardware
+- **ESP8266** - WiFi microcontroller
+- **Arduino IDE** - Hardware programming
+- **RFID RC522** - Card reader module
+
+### Development Tools
+- **VS Code** - IDE
+- **Firebase CLI** - Deployment
+- **Git** - Version control
+
+## 📋 Prerequisites
+
+- Flutter SDK (3.0+)
+- Dart SDK (2.17+)
+- Firebase project setup
+- Arduino IDE (for hardware)
+- ESP8266 board and RFID module
 
 ## Getting Started
 
@@ -129,7 +188,22 @@ cd ..
 flutter run -d <device_id>
 ```
 
-## Project Structure
+## 🔧 Hardware Setup
+
+This project includes Arduino code for ESP8266 integration:
+
+- `arduino_locker_code.ino` - Main Arduino sketch
+- `RapidKL_ESP8266_Simple.ino` - Simplified ESP8266 code
+- Hardware documentation in `IoT_Hardware_Documentation.md`
+
+### Hardware Components
+- ESP8266 WiFi Module
+- RFID RC522 Reader
+- Servo motors for locker mechanism
+- LED indicators
+- Buzzer for audio feedback
+
+## 📁 Project Structure
 
 ```
 lib/
