@@ -1,0 +1,25 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "rfid-locker-system-85ecc",
+          "appId": "1:610520452603:android:c414d0bfd11d9a2fc9cf5e",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "rfid-locker-system-85ecc",
+          "configurations": {
+            "android": "1:610520452603:android:c414d0bfd11d9a2fc9cf5e",
+            "web": "1:610520452603:web:95f7b9a9b4e97c33c9cf5e"
+          }
+        }
+      }
+    }
+  }
+}

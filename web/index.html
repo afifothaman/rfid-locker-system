@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Smart Locker System with RFID Access Control">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#1E88E5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Smart Locker">
+  
+  <!-- iOS Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Smart Locker">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-status-bar" content="#1E88E5">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="manifest" href="manifest.json">
+
+  <title>Smart Locker System</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+  
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC84NBWJRW4IS0r_5KVMjw-Fh7w2uxbPwc",
+      authDomain: "rfid-locker-system-85ecc.firebaseapp.com",
+      projectId: "rfid-locker-system-85ecc",
+      storageBucket: "rfid-locker-system-85ecc.firebasestorage.app",
+      messagingSenderId: "610520452603",
+      appId: "1:610520452603:web:95f7b9a9b4e97c33c9cf5e"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase services
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+    const storage = firebase.storage();
+    
+    // Initialize messaging with error handling
+    let messaging = null;
+    try {
+      messaging = firebase.messaging();
+    } catch (error) {
+      console.log('Firebase messaging not available (this is non-critical):', error);
+    }
+    
+    const analytics = firebase.analytics();
+
+    // Handle service worker registration for notifications (optional)
+    if ('serviceWorker' in navigator && messaging) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(function(err) {
+            console.log('ServiceWorker registration failed (non-critical):', err);
+            // App continues to work without push notifications
+          });
+      });
+    }
+  </script>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+  
+  <!-- Loading Indicator -->
+  <div id="loading" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+    z-index: 9999;
+    transition: opacity 0.5s;
+  ">
+    <div style="text-align: center;">
+      <img src="favicon.png" alt="Loading..." style="width: 80px; height: 80px; margin-bottom: 20px;">
+      <p style="color: #333; font-family: Arial, sans-serif;">Loading Smart Locker System...</p>
+    </div>
+  </div>
+  
+  <script>
+    // Hide loading indicator when Flutter is ready
+    window.addEventListener('load', function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.opacity = '0';
+        setTimeout(function() {
+          loading.style.display = 'none';
+        }, 500);
+      }
+    });
+  </script>
+</body>
+</html>
