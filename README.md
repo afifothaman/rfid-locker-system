@@ -1,6 +1,6 @@
-# 🔐 Smart RFID Locker Management System
+# 🔐 RFID-Based Smart Security Box Management System for RapidKL
 
-A comprehensive Flutter-based locker management system with RFID access control, Firebase backend, and real-time monitoring capabilities. Built as a final year project demonstrating full-stack mobile development skills.
+A comprehensive Flutter-based locker management system with RFID access control, Firebase backend, and IoT hardware integration. Developed as a final year project for RapidKL's security box management needs, demonstrating full-stack mobile development and IoT integration skills.
 
 ## 🚀 Live Demo
 [Add your deployed app link here when available]
@@ -45,6 +45,29 @@ A comprehensive Flutter-based locker management system with RFID access control,
 - Cloud Firestore for real-time data
 - Offline support and data synchronization
 - Secure data storage and backup
+- RESTful API integration with Arduino
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Flutter App   │    │   Firebase      │    │   ESP8266       │
+│   (Mobile/Web)  │◄──►│   Backend       │◄──►│   Hardware      │
+│                 │    │                 │    │                 │
+│ • User Auth     │    │ • Authentication│    │ • RFID Scanner  │
+│ • Admin Panel   │    │ • Firestore DB  │    │ • Servo Control │
+│ • Real-time UI  │    │ • Cloud Storage │    │ • WiFi Connect  │
+│ • Notifications │    │ • Security Rules│    │ • Access Logs   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### Data Flow
+1. **User Authentication** → Firebase Auth validates users
+2. **RFID Scan** → ESP8266 reads card and sends to Firestore
+3. **Access Validation** → Firebase checks user permissions
+4. **Locker Control** → Servo motor opens/closes locker
+5. **Logging** → All events logged to Firestore
+6. **Real-time Updates** → Flutter app shows live status
 
 ## 🛠️ Tech Stack
 
@@ -72,28 +95,61 @@ A comprehensive Flutter-based locker management system with RFID access control,
 
 ## 📋 Prerequisites
 
-- Flutter SDK (3.0+)
-- Dart SDK (2.17+)
-- Firebase project setup
-- Arduino IDE (for hardware)
-- ESP8266 board and RFID module
+### Software Requirements
+- **Windows 10/11** (recommended)
+- **Flutter SDK** (3.0+) with Dart SDK
+- **Visual Studio Code** with Flutter/Dart extensions
+- **Arduino IDE** for hardware programming
+- **Chrome Browser** (for web testing)
+- **Android Studio** (optional, for Android development)
 
-## Getting Started
+### Hardware Requirements
+- **NodeMCU ESP8266** (ESP-12E Module)
+- **MFRC522 RFID Module**
+- **Servo Motor** (for locker mechanism)
+- **LED indicators** and **Buzzer**
+- **Android device** (for mobile testing)
+- Stable internet connection
 
-### 1. Clone the repository
+### Firebase Setup
+- Firebase project with Authentication and Firestore enabled
+- `google-services.json` for Android
+- Firebase web configuration
 
+## 🚀 Quick Start Guide
+
+### For Web Development (Fastest Setup)
 ```bash
-git clone https://github.com/yourusername/smart-locker-system.git
-cd smart-locker-system
-```
+# 1. Clone the repository
+git clone https://github.com/afifothaman/rfid-locker-system.git
+cd rfid-locker-system
 
-### 2. Install dependencies
-
-```bash
+# 2. Install dependencies
 flutter pub get
+
+# 3. Add localhost to Firebase Auth domains
+# Go to Firebase Console > Auth > Settings > Authorized domains
+# Add: localhost, 127.0.0.1
+
+# 4. Run on Chrome
+flutter run -d chrome
 ```
 
-### 3. Configure Firebase
+### For Android Development
+```bash
+# 1. Ensure Android SDK is installed
+flutter doctor
+
+# 2. Connect Android device or start emulator
+flutter devices
+
+# 3. Run on Android
+flutter run
+```
+
+### Complete Setup Process
+
+### 1. Configure Firebase
 
 1. Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Add a new web app to your Firebase project
@@ -116,13 +172,13 @@ APP_VERSION=1.0.0
 APP_ENV=development
 ```
 
-### 4. Enable Firebase Authentication Methods
+### 2. Enable Firebase Authentication Methods
 
 In the Firebase Console, enable the following authentication methods:
 - Email/Password
 - Google Sign-In (optional)
 
-### 5. Set up Firestore Database
+### 3. Set up Firestore Database
 
 1. Go to Firestore Database in Firebase Console
 2. Create a new database in production mode
@@ -148,7 +204,7 @@ service cloud.firestore {
 }
 ```
 
-### 6. Set up Firebase Storage
+### 4. Set up Firebase Storage
 
 1. Go to Storage in Firebase Console
 2. Set up security rules:
@@ -188,20 +244,90 @@ cd ..
 flutter run -d <device_id>
 ```
 
+## �️H Database Structure
+
+The system uses Firestore with the following collections:
+
+### Collections Overview
+- **`users`** - User profiles and authentication data
+- **`lockers`** - Physical locker information and status
+- **`lockerAssignments`** - Active locker-user assignments
+- **`access_logs`** - All access attempts and results
+- **`security_events`** - Security-related events and alerts
+
+### Key Fields
+```javascript
+// users collection
+{
+  id: "user_uid",
+  role: "user" | "admin",
+  status: "pending" | "active" | "rejected",
+  rfidUid: "rfid_card_uid",
+  name: "User Name",
+  email: "user@example.com"
+}
+
+// lockerAssignments collection
+{
+  id: "assignment_id",
+  lockerId: "locker_id",
+  userId: "user_id",
+  rfidUid: "rfid_uid",
+  expiresAt: timestamp,
+  status: "active" | "expired"
+}
+```
+
+For complete database schema, see `database_structure.md`.
+
 ## 🔧 Hardware Setup
 
-This project includes Arduino code for ESP8266 integration:
+### Arduino Components
+- **NodeMCU ESP8266** (ESP-12E Module)
+- **MFRC522 RFID Module**
+- **Servo Motor** for locker mechanism
+- **LED indicators** and **Buzzer**
 
-- `arduino_locker_code.ino` - Main Arduino sketch
-- `RapidKL_ESP8266_Simple.ino` - Simplified ESP8266 code
-- Hardware documentation in `IoT_Hardware_Documentation.md`
+### Wiring Diagram
+```
+MFRC522 Connections:
+- RST → D3
+- SS/SDA → D4  
+- MOSI → D7
+- MISO → D6
+- SCK → D5
+- 3.3V and GND
 
-### Hardware Components
-- ESP8266 WiFi Module
-- RFID RC522 Reader
-- Servo motors for locker mechanism
-- LED indicators
-- Buzzer for audio feedback
+Servo Motor:
+- Signal → D8
+- +5V and GND
+```
+
+### Arduino Libraries Required
+Install via Arduino IDE Library Manager:
+- ESP8266WiFi
+- ESP8266HTTPClient
+- WiFiClientSecure
+- ArduinoJson
+- MFRC522 by GithubCommunity
+- Servo
+
+### Arduino Configuration
+Before uploading, configure these variables in the Arduino code:
+```cpp
+const char* ssid = "your_wifi_ssid";
+const char* password = "your_wifi_password";
+const String PROJECT_ID = "your-firebase-project-id";
+const String API_KEY = "your-firebase-api-key";
+const String LOCKER_ID = "your-locker-id";
+```
+
+### Upload Process
+1. Connect ESP8266 via USB
+2. Select Board: "NodeMCU 1.0 (ESP-12E Module)"
+3. Select correct COM port
+4. Upload the code
+5. Open Serial Monitor (115200 baud) to view logs
 
 ## 📁 Project Structure
 
@@ -243,6 +369,37 @@ APP_NAME=Smart Locker System
 APP_VERSION=1.0.0
 APP_ENV=development
 ```
+
+## 🔧 Troubleshooting
+
+### Flutter App Issues
+- **Firebase connection errors**: Check `google-services.json` and internet connection
+- **Permission errors**: Ensure Firestore security rules are correctly set
+- **Build errors**: Run `flutter clean` then `flutter pub get`
+
+### Arduino Issues
+- **WiFi connection failed**: Verify SSID and password
+- **RFID not detected**: Check wiring and 3.3V power supply
+- **Firestore API errors**: Verify PROJECT_ID and API_KEY
+- **Time sync issues**: Ensure internet access for NTP
+
+### Firebase Issues
+- **Authentication errors**: Check authorized domains in Firebase Console
+- **Firestore permission denied**: Verify security rules and user document creation
+- **Missing collections**: Manually create collections if auto-creation fails
+
+### Development Tips
+- Use `flutter doctor` to check Flutter installation
+- Monitor Arduino Serial output at 115200 baud
+- Test web version first for faster development
+- Use Firebase Console to monitor database changes
+
+## 📚 Documentation
+
+- **`manual.txt`** - Complete installation and setup guide
+- **`database_structure.md`** - Detailed database schema
+- **`IoT_Hardware_Documentation.md`** - Hardware integration guide
+- **`ESP8266_INTEGRATION_GUIDE.md`** - Arduino setup instructions
 
 ## Contributing
 

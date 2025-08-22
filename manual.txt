@@ -1,0 +1,173 @@
+RFID-BASED SMART SECURITY BOX MANAGEMENT SYSTEM FOR RAPIDKL
+
+Developer/Installation Manual
+===================================
+
+This guide explains how to set up the project on a new PC for development, testing, or deployment.
+
+---
+
+1. Important
+----------------
+- Windows 10/11 PC
+- Internet connection
+- Arduino-compatible board (e.g., NodeMCU ESP8266)
+- RFID module (MFRC522)
+- Android device (for Flutter app) "-flutter run"
+- Can launch on Web too "-flutter run -d chrome"
+
+New PC Quick Start (Web/Chrome)
+--------------------------------
+- Install Flutter & add to PATH → `flutter doctor`
+- Install Chrome
+- In Firebase Console > Auth > Settings → add `localhost` and `127.0.0.1` to Authorized domains
+- Optional: run FlutterFire to generate `lib/firebase_options.dart` if missing:
+  - `dart pub global activate flutterfire_cli`
+  - `flutterfire configure -p <your-project-id> -a -w`
+- Open folder `fyp rfid/` in VS Code
+- Run: `flutter pub get`
+- Launch: `flutter run -d chrome`
+
+New PC Quick Start (Android)
+----------------------------
+- Install Flutter & Android SDK (Android Studio or command-line tools)
+- Connect an Android device (USB, Developer Mode) or start an emulator
+- Ensure `android/app/google-services.json` exists
+- Optional: run FlutterFire configure if missing `firebase_options.dart`
+- Open folder `fyp rfid/` in VS Code → `flutter pub get`
+- Launch: `flutter run`
+
+2. Install Required Software
+---------------------------
+A. **Flutter & Dart**
+   - Download from: https://docs.flutter.dev/get-started/install
+   - Add Flutter to your PATH environment variable.
+   - Run `flutter doctor` in terminal to check setup.
+
+B. **Visual Studio Code (Recommended)**
+   - Download and install from: https://code.visualstudio.com/
+   - Install the Flutter and Dart extensions from the Extensions Marketplace.
+   - Open the project folder (`fyp rfid`) in VS Code.
+   - Use the built-in terminal for all commands.
+
+C. **Android Studio (Alternative)**
+   - Download and install from: https://developer.android.com/studio
+   - Install Android SDK and create a device emulator (or use a real device).
+   - Can be used instead of VS Code if preferred.
+
+C. **Arduino IDE**
+   - Download from: https://www.arduino.cc/en/software
+   - Install ESP8266 board support via Boards Manager.
+   - Install required libraries: ESP8266WiFi, ESP8266HTTPClient, WiFiClientSecure, ArduinoJson, MFRC522, Servo.
+
+3. Firebase Setup
+-----------------
+A. **Create Firebase Project**
+   - Go to https://console.firebase.google.com/
+   - Create a new project (or use the provided project ID).
+   - Enable **Authentication** (Email/Password).
+   - Enable **Cloud Firestore** (test mode for initial setup, then apply security rules).
+   - Download `google-services.json` and place it in `android/app/` in your Flutter project.
+
+B. **Add Android app in Firebase**
+   - In Firebase Console > Project settings > Your apps > Android, click "Add app".
+   - Register the app with the package name (see `android/app/build.gradle` → `defaultConfig { applicationId "..." }`).
+   - Download `google-services.json` and place it in `android/app/` (replace if it already exists).
+   - In `android/build.gradle` (Project), ensure:
+     - `dependencies { classpath 'com.google.gms:google-services:4.4.2' }`
+   - In `android/app/build.gradle` (Module), ensure:
+     - At bottom: `apply plugin: 'com.google.gms.google-services'`
+   - (Optional) Add SHA-1/SHA-256 for Google sign-in, if you use it.
+   - Ensure Authentication providers include Email/Password (Console > Authentication > Sign-in method).
+   - Enable Firebase Auth and Firestore APIs in Google Cloud Console if needed.
+
+C. **Add Web app in Firebase**
+   - In Firebase Console > Project settings > Your apps > Web, click "Add app".
+   - Give an app nickname (e.g., `fyp-web`). No hosting needed.
+   - Two ways to configure Flutter for web:
+     1) Recommended: Use FlutterFire CLI (see section below) to generate `lib/firebase_options.dart` and initialize in `main.dart`.
+     2) Or, ensure your `web/index.html` contains the Firebase config snippet (only if you are using JS SDK directly; most Flutter apps use FlutterFire).
+   - Authentication > Settings > Authorized domains: add `localhost`, `127.0.0.1`, and any custom domain you’ll use.
+   - Test with: `flutter run -d chrome`.
+
+D. **FlutterFire CLI (optional but recommended)**
+   - Install: `dart pub global activate flutterfire_cli`
+   - From your project root (`fyp rfid`), run: `flutterfire configure -p <your-firebase-project-id> -a -w`
+     - This generates `lib/firebase_options.dart` and configures Android & Web.
+   - In your `main.dart`, ensure Firebase initializes with:
+     - `await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);`
+   - Re-run: `flutter pub get` and then `flutter run` / `flutter run -d chrome`.
+
+E. **Authentication & Firestore Rules Notes**
+   - Auth > Sign-in method: enable Email/Password.
+   - Auth > Settings > Authorized domains: include `localhost`, `127.0.0.1`, and your deployment domain.
+   - Firestore > Rules: paste the provided rules from `firestore.rules` (Console) or deploy via Firebase CLI.
+   - If users get permission errors on first login, ensure user docs are auto-created/merged after login (pattern implemented in app).
+
+4. Project Setup
+----------------
+A. **Flutter Project**
+   - Copy the `fyp rfid` folder into your workspace.
+   - Open Visual Studio Code and open the `fyp rfid` folder.
+   - Open the terminal in VS Code and run:
+     - `flutter pub get` (to fetch dependencies)
+     - **To run on Android:**
+       - Connect your Android device via USB (enable Developer Mode), or start an emulator.
+       - Run: `flutter run` (the app will launch on the device/emulator)
+     - **To run on Web:**
+       - Make sure Chrome is installed.
+       - Run: `flutter run -d chrome` (the app will launch in your browser)
+   - If you get permission errors, make sure your Firestore rules match the provided `firestore.rules`.
+
+B. **Arduino Code**
+   - Code path: `arduino code/arduino_idea_code/arduino_idea_code.ino` (inside the submission folder).
+   - Open the `.ino` in Arduino IDE.
+   - Board settings (Tools):
+     - Board: `NodeMCU 1.0 (ESP-12E Module)` or generic ESP8266 board
+     - Flash Size: default
+     - Upload Speed: 115200
+     - Port: select the COM port of your device
+   - Required libraries (Install via Library Manager):
+     - ESP8266WiFi
+     - ESP8266HTTPClient
+     - WiFiClientSecure
+     - ArduinoJson
+     - MFRC522 by GithubCommunity
+     - Servo
+   - Wiring summary:
+     - MFRC522: RST → D3, SS/SDA → D4, MOSI → D7, MISO → D6, SCK → D5, 3.3V and GND
+     - Servo signal → D8, +5V and GND (use proper power; avoid drawing high current from board)
+   - Configure these variables in the code before upload:
+     - `const char* ssid` and `password`
+     - `const String PROJECT_ID`, `API_KEY`, `LOCKER_ID`
+   - Behavior:
+     - Uses Firestore REST API (no device SDK) to validate active assignment in `lockerAssignments`
+     - Logs to `access_logs` with ISO8601 timestamp
+     - Syncs time via NTP (UTC+8)
+   - Upload:
+     - Connect the ESP8266 via USB, select COM port, click Upload
+     - Open Serial Monitor @ 115200 baud to observe logs (WiFi connect, RFID UID, Firestore responses)
+   - Troubleshooting:
+     - If HTTP errors occur, check WiFi, `API_KEY`, and that Firestore project/collection names match exactly
+     - If RFID not detected, recheck wiring and provide stable 3.3V power
+     - If time not syncing, ensure internet access; code waits for valid NTP time
+
+5. Firestore Database Structure
+------------------------------
+- See `database_structure.md` for all collections and fields.
+- Make sure to manually create collections if needed (users, lockers, lockerAssignments, access_logs, security_events).
+
+6. Troubleshooting
+------------------
+- If the Flutter app cannot connect to Firebase, check `google-services.json` and internet connection.
+- If the Arduino cannot connect, check WiFi credentials and make sure your Firestore API key is valid.
+- For permission errors, ensure the Firestore security rules are correctly set and each user document is created after login.
+
+7. References
+-------------
+- Flutter: https://docs.flutter.dev/
+- Firebase: https://firebase.google.com/docs/
+- Arduino: https://www.arduino.cc/en/Guide/HomePage
+
+---
+For further help, see the README or contact the project maintainer.
